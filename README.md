@@ -15,4 +15,4 @@ python main.py
 
 Подключение идёт напрямую в OpenAI. В `.env` нужны `TELEGRAM_BOT_TOKEN` и `OPENAI_API_KEY`.
 
-Ответ на задание: [Project_AI_MPA/docs/PEm09_Ответ_на_задание.docx](Project_AI_MPA/docs/PEm09_Ответ_на_задание.docx). Бот: [@AI_MyPersonalAssistant_bot](https://t.me/AI_MyPersonalAssistant_bot). Репозиторий: [pem09-ai-personal-assistant](https://github.com/aleksandrfprikolota-navigator/pem09-ai-personal-assistant).
+Ответ на задание: [PEm09 Ответ на задание.docx](PEm09%20Ответ%20на%20задание.docx). Бот: [@AI_MyPersonalAssistant_bot](https://t.me/AI_MyPersonalAssistant_bot). Репозиторий: [pem09-ai-personal-assistant](https://github.com/aleksandrfprikolota-navigator/pem09-ai-personal-assistant).
