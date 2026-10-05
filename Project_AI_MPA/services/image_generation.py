@@ -3,6 +3,7 @@ Image Generation Service.
 Uses OpenAI DALL-E API to generate images from text prompts.
 """
 
+import base64
 import aiohttp
 import aiofiles
 from pathlib import Path
@@ -10,7 +11,7 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 import json
 
-from config import OPENAI_API_KEY, OPENAI_BASE_URL, DATA_DIR
+from config import OPENAI_API_KEY, OPENAI_BASE_URL, DATA_DIR, DALLE_MODEL
 from utils.logging import logger
 
 
@@ -129,27 +130,35 @@ async def generate_image(
         Dictionary with 'image_path', 'revised_prompt', and 'url'
     """
     try:
-        logger.info(f"Generating image with DALL-E: {prompt[:100]}...")
+        logger.info(f"Generating image with {DALLE_MODEL}: {prompt[:100]}...")
+        logger.debug(f"Requested style '{style}' is kept in the prompt only")
 
         from services.openai_client import openai_client
 
+        quality_map = {"standard": "auto", "hd": "high"}
+        size_map = {"1024x1792": "1024x1536", "1792x1024": "1536x1024"}
+        # style есть только у DALL-E 3. gpt-image-2 отклоняет это поле.
         result = await openai_client.client.images.generate(
-            model="dall-e-3",
+            model=DALLE_MODEL,
             prompt=prompt,
             n=1,
-            size=size,
-            quality=quality,
-            style=style,
+            size=size_map.get(size, size),
+            quality=quality_map.get(quality, quality),
+            output_format="png",
         )
 
         image_data = result.data[0]
-        image_url = image_data.url
         revised_prompt = image_data.revised_prompt or prompt
-        
+        image_url = getattr(image_data, "url", None)
+
         logger.info(f"Image generated successfully. Revised prompt: {revised_prompt[:100]}...")
-        
-        # Download image
-        image_path = await download_image(image_url)
+
+        if getattr(image_data, "b64_json", None):
+            image_path = _save_image_bytes(base64.b64decode(image_data.b64_json))
+        elif image_url:
+            image_path = await download_image(image_url)
+        else:
+            raise RuntimeError("OpenAI не вернул изображение")
         
         return {
             "image_path": image_path,
@@ -161,6 +170,14 @@ async def generate_image(
     except Exception as e:
         logger.error(f"Error generating image: {e}")
         raise
+
+
+def _save_image_bytes(content: bytes) -> Path:
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filepath = GENERATED_IMAGES_DIR / f"generated_{timestamp}.png"
+    filepath.write_bytes(content)
+    logger.info(f"Image saved to: {filepath}")
+    return filepath
 
 
 async def download_image(url: str) -> Path:

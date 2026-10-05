@@ -26,7 +26,8 @@ async def _send_message_safe(chat_id, text, **kwargs):
             raise
         logger.warning(f"Markdown parse failed, sending plain text: {exc}")
         plain_kwargs = dict(kwargs)
-        plain_kwargs["parse_mode"] = None
+        # None здесь снова включает Markdown бота. Пустая строка отключает разметку.
+        plain_kwargs["parse_mode"] = ""
         return await _send_message(chat_id, text, **plain_kwargs)
 
 

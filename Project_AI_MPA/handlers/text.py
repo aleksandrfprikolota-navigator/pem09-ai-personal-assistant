@@ -113,8 +113,7 @@ async def cmd_image(message: types.Message):
     try:
         # Generate image directly
         from services.router import route_image_generation_request
-        from utils.helpers import cleanup_file
-        
+
         response = await route_image_generation_request(
             user_id=user_id,
             prompt=prompt,
@@ -129,19 +128,17 @@ async def cmd_image(message: types.Message):
             await bot.send_chat_action(message.chat.id, 'upload_photo')
             
             image_path = response['image_path']
-            try:
-                with open(image_path, 'rb') as photo:
-                    caption = response.get('revised_prompt', '')
-                    if len(caption) > 1024:
-                        caption = caption[:1021] + "..."
-                    
-                    await bot.send_photo(
-                        message.chat.id,
-                        photo,
-                        caption=caption if caption else None
-                    )
-            finally:
-                cleanup_file(image_path)
+            with open(image_path, 'rb') as photo:
+                caption = response.get('revised_prompt', '')
+                if len(caption) > 1024:
+                    caption = caption[:1021] + "..."
+
+                await bot.send_photo(
+                    message.chat.id,
+                    photo,
+                    caption=caption if caption else None
+                )
+            logger.info(f"Image kept at {image_path}")
     
     except Exception as e:
         logger.error(f"Error in /image command: {e}", exc_info=True)
@@ -173,31 +170,23 @@ async def handle_text_message(message: types.Message):
             await bot.send_message(message.chat.id, response["text"])
             
             # Then send the generated image
-            from utils.helpers import cleanup_file
             image_path = response['image_path']
-            
-            try:
-                # Show uploading photo action
-                await bot.send_chat_action(message.chat.id, 'upload_photo')
-                
-                # Send image
-                with open(image_path, 'rb') as photo:
-                    caption = response.get('revised_prompt', '')
-                    if len(caption) > 1024:
-                        caption = caption[:1021] + "..."
-                    
-                    await bot.send_photo(
-                        message.chat.id, 
-                        photo,
-                        caption=caption if caption else None
-                    )
-                
-                logger.info(f"Image sent to user {user_id}")
-                
-            finally:
-                # Cleanup generated image file
-                cleanup_file(image_path)
-            
+
+            await bot.send_chat_action(message.chat.id, 'upload_photo')
+
+            with open(image_path, 'rb') as photo:
+                caption = response.get('revised_prompt', '')
+                if len(caption) > 1024:
+                    caption = caption[:1021] + "..."
+
+                await bot.send_photo(
+                    message.chat.id,
+                    photo,
+                    caption=caption if caption else None
+                )
+
+            logger.info(f"Image sent to user {user_id} and kept at {image_path}")
+
             return
         
         # Check mode for voice response

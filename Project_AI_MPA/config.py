@@ -7,8 +7,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Файл .env важнее переменных окружения Windows: иначе старый токен перекрывает новый.
+load_dotenv(override=True)
 
 # Base directory
 BASE_DIR = Path(__file__).parent
@@ -61,12 +61,12 @@ GPT_MINI_MODEL = "gpt-4o-mini"
 WHISPER_MODEL = "whisper-1"
 TTS_MODEL = "tts-1"
 VISION_MODEL = "gpt-4o"
-DALLE_MODEL = "dall-e-3"
+DALLE_MODEL = "gpt-image-2"
 
-# DALL-E Configuration
-DALLE_DEFAULT_SIZE = "1024x1024"  # Options: 1024x1024, 1024x1792, 1792x1024
-DALLE_DEFAULT_QUALITY = "standard"  # Options: standard, hd
-DALLE_DEFAULT_STYLE = "vivid"  # Options: vivid, natural
+# Параметры gpt-image-2. Поля style и quality=standard относятся только к DALL-E 3.
+DALLE_DEFAULT_SIZE = "1024x1024"
+DALLE_DEFAULT_QUALITY = "auto"  # auto, low, medium, high
+DALLE_DEFAULT_STYLE = "vivid"
 
 # Database Configuration
 DB_PATH = BASE_DIR / os.getenv("DB_PATH", "data/embeddings.db")

@@ -5,6 +5,7 @@ venv/
 __pycache__/
 *.py[cod]
 *.log
+Project_AI_MPA/data/generated_images/
 .DS_Store
 Thumbs.db
 _assignment.txt

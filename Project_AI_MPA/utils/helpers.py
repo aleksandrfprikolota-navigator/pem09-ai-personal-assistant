@@ -160,7 +160,8 @@ class UserSession:
     
     def get_mode(self, user_id: int) -> str:
         """Get current mode for a user."""
-        return self.sessions.get(f"{user_id}_mode", "text")
+        from config import DEFAULT_MODE
+        return self.sessions.get(f"{user_id}_mode", DEFAULT_MODE)
     
     def set_mode(self, user_id: int, mode: str):
         """Set mode for a user."""

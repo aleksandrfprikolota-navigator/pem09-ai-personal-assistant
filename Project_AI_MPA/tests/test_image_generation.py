@@ -176,9 +176,9 @@ class TestImageGenerationConfig:
             DALLE_DEFAULT_STYLE
         )
         
-        assert DALLE_MODEL == "dall-e-3"
-        assert DALLE_DEFAULT_SIZE in ["1024x1024", "1024x1792", "1792x1024"]
-        assert DALLE_DEFAULT_QUALITY in ["standard", "hd"]
+        assert DALLE_MODEL == "gpt-image-2"
+        assert DALLE_DEFAULT_SIZE in ["1024x1024", "1024x1536", "1536x1024"]
+        assert DALLE_DEFAULT_QUALITY in ["auto", "low", "medium", "high"]
         assert DALLE_DEFAULT_STYLE in ["vivid", "natural"]
 
 

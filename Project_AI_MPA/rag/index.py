@@ -157,7 +157,10 @@ class VectorIndex:
                     )
                     return count
 
-            logger.info("Rebuilding vector index from data/documents")
+            logger.info(
+                "Rebuilding vector index from data/documents. "
+                "Эмбеддинги OpenAI для всех файлов могут занять несколько минут."
+            )
             self.clear_index()
 
             documents = document_loader.load_directory(directory)
@@ -195,18 +198,12 @@ class VectorIndex:
         return current == signature
 
     def clear_index(self):
-        """Clear the entire vector store."""
+        """Очищает коллекцию, не удаляя файл базы: на Windows он занят текущим процессом."""
         try:
-            # Delete and recreate
-            import shutil
-            if self.persist_directory.exists():
-                shutil.rmtree(self.persist_directory)
-            
-            self.persist_directory.mkdir(parents=True, exist_ok=True)
+            if self.vectorstore is not None:
+                self.vectorstore.delete_collection()
             self._load_or_create_vectorstore()
-            
             logger.info("Vector store cleared")
-            
         except Exception as e:
             logger.error(f"Error clearing index: {e}")
             raise

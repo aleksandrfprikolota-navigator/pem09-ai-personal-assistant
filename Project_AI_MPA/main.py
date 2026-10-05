@@ -13,6 +13,20 @@ from utils.logging import logger
 async def setup_bot():
     """Setup bot with handlers and initialize RAG if needed."""
     logger.info("Bot starting up...")
+
+    try:
+        bot_info = await bot.get_me()
+        logger.info(f"Bot started: @{bot_info.username}")
+    except Exception as e:
+        if "401" in str(e) or "Unauthorized" in str(e):
+            logger.error(
+                "Telegram не принял TELEGRAM_BOT_TOKEN. "
+                "В @BotFather откройте своего бота и скопируйте токен заново "
+                "в Project_AI_MPA/.env, без кавычек и пробелов."
+            )
+        else:
+            logger.error(f"Could not get bot info: {e}")
+        raise
     
     # Import handlers (they will register themselves via decorators)
     try:
@@ -40,12 +54,6 @@ async def setup_bot():
     
     except Exception as e:
         logger.warning(f"Could not initialize RAG index: {e}")
-    
-    try:
-        bot_info = await bot.get_me()
-        logger.info(f"Bot started: @{bot_info.username}")
-    except Exception as e:
-        logger.error(f"Could not get bot info: {e}")
 
 
 async def shutdown_bot():

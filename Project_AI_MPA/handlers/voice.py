@@ -119,12 +119,10 @@ async def handle_voice_message(message: types.Message):
             
             # Then send the generated image
             image_path = response['image_path']
-            
+
             try:
-                # Show uploading photo action
                 await bot.send_chat_action(message.chat.id, 'upload_photo')
-                
-                # Send image
+
                 with open(image_path, 'rb') as photo:
                     caption = response.get('revised_prompt', '')
                     if len(caption) > 1024:
@@ -136,7 +134,7 @@ async def handle_voice_message(message: types.Message):
                         caption=caption if caption else None
                     )
                 
-                logger.info(f"Image sent to user {user_id} (from voice message)")
+                logger.info(f"Image sent to user {user_id} and kept at {image_path}")
                 
             except Exception as img_error:
                 logger.error(f"Error sending image: {img_error}")
@@ -165,7 +163,7 @@ async def handle_voice_message(message: types.Message):
     
     finally:
         # Cleanup temporary files
-        cleanup_files(voice_file_path, audio_response_path, image_path)
+        cleanup_files(voice_file_path, audio_response_path)
 
 
 @bot.message_handler(content_types=['audio'])
