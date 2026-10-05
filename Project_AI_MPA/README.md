@@ -87,4 +87,4 @@ pytest
 
 Источник фактов: [1c-prem.ru/about](https://www.1c-prem.ru/about/), [1c-prem.ru/services](https://www.1c-prem.ru/services/), [1c-prem.ru/articles](https://www.1c-prem.ru/articles/).
 
-Ответ на задание: [docs/HOMEWORK.md](docs/HOMEWORK.md) и [PEm09 Ответ на задание.docx](../PEm09%20Ответ%20на%20задание.docx) в корне репозитория. Бот в Telegram: [@AI_MyPersonalAssistant_bot](https://t.me/AI_MyPersonalAssistant_bot).
+Бот в Telegram: [@AI_MyPersonalAssistant_bot](https://t.me/AI_MyPersonalAssistant_bot).
