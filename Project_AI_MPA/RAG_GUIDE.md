@@ -399,18 +399,18 @@ Generated RAG response
 
 ## 💡 Примеры использования
 
-### Для студента
+### Для вопросов о «1С-Премиум»
 
 ```
-# Загрузите конспекты лекций
+# Материалы сайта уже лежат в базе
 data/documents/
-├── physics_lecture_1.pdf
-├── physics_lecture_2.pdf
-└── math_notes.txt
+├── company.txt
+├── service_1c_bus.txt
+└── article_vaybkoding-v-1s-ot-eksperimenta-k-upravlyaemoy-praktike.txt
 
 # В боте
 /mode rag
-Объясни закон Ньютона из лекций
+Что входит во внедрение 1С:Шины?
 ```
 
 ### Для бизнеса
